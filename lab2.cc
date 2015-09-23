@@ -5,13 +5,20 @@ using namespace std;
 
 int main()
 {
+    monetary::Money m1{"SEK",13,37};
 
-    monetary::Money m1;
-    monetary::Money m1("nisse", 100,1);
-
-    cout << "Valuta: " << m1.cur() << endl 
+    cout << endl << "m1 består av följande:" << endl
+         << "Valuta: " << m1.cur() << endl 
          << "Enheter: " << m1.uni() << endl 
-         << "Hundradelar: " << m1.hun() << endl;
+         << "Hundradelar: " << m1.hun() << endl<< endl;
 
-return 0;
+    monetary::Money m2{m1};
+
+    cout << "m2 blir en kopia av m1." << endl
+         << endl << "m2 består nu av:" << endl
+         << "Valuta: " << m2.cur() << endl 
+         << "Enheter: " << m2.uni() << endl 
+         << "Hundradelar: " << m2.hun() << endl<< endl;
+
+    return 0;
 }
