@@ -5,7 +5,7 @@ using namespace std;
 
 int main()
 {
-    monetary::Money m1{"SEK",13,37};
+    monetary::Money m1{13,99};
 
     cout << endl << "m1 består av följande:" << endl
          << "Valuta: " << m1.cur() << endl 
@@ -20,5 +20,8 @@ int main()
          << "Enheter: " << m2.uni() << endl 
          << "Hundradelar: " << m2.hun() << endl<< endl;
 
+    m2.print(cout);
+    cout << endl;
+    cout << m2 << endl;
     return 0;
 }

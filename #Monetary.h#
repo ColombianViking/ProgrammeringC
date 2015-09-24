@@ -22,7 +22,7 @@ public:
     Money (Money&);
     Money (std::string, int, int);
     std::string cur () {return currency;}
-    int uni () {return units;}
+    int uni () {return units;} 
     int hun () {return hundreds;}
     void print(std::ostream&);
 };
