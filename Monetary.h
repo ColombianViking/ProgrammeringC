@@ -26,6 +26,6 @@ public:
     int hun () {return hundreds;}
 };
 
-//TJA
+// Låt bli med onödiga kommentarer
 }
 #endif
