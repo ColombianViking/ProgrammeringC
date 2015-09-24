@@ -14,18 +14,17 @@ private:
     int units, hundreds; 
 
 public:
-    Money (std::string a, int b, int c) : currency{a}, units{b}, hundreds{c} {};
-      /* Money (int);
-    Money (int, int);
-    Money (std::string);
-    Money (std::string, int);
+    Money () : Money("", 0, 0) {}
+    Money (int b) : Money("", b, 0) {}
+    Money (int b, int c) : Money("", b, c) {}
+    Money (std::string a) : Money(a, 0, 0) {}
+    Money (std::string a, int b) : Money(a, b, 0) {}
+    Money (Money&);
     Money (std::string, int, int);
-    Money (Money&);*/
     std::string cur () {return currency;}
     int uni () {return units;}
     int hun () {return hundreds;}
 };
 
-//TJA
 }
 #endif
