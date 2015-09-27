@@ -74,4 +74,30 @@ namespace monetary
         return o << m.hun();
     }
 
+    Money& Money::operator= (Money& rhs)
+    {
+        if(this->cur() == rhs.cur())
+        {
+            this->units = rhs.uni();
+            this->hundreds = rhs.hun();
+            return *this;
+        }
+        
+        if(rhs.cur() == "")
+        {
+            this->units = rhs.uni();
+            this->hundreds = rhs.hun();
+            return *this;
+        }
+        
+        if(this->cur() == "")
+        {
+            this->currency = rhs.cur();
+            return *this;
+        }
+
+        cerr << "En specificerad valuta får ej ändras!" << endl;
+        return *this;
+        }
+
 }
