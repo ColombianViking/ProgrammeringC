@@ -61,19 +61,6 @@ namespace monetary
     {
         m.print(o);
         return o;
-        /* if(m.cur() != "")
-        {
-            o << m.cur() << " ";
-        }
-
-        o << m.uni() << ".";
-
-        if(m.hun() < 10)
-        {
-            o << 0;
-        }
-        
-        return o << m.hun();*/
     }
 
     Money& Money::operator= (Money& rhs)
@@ -94,10 +81,9 @@ namespace monetary
 
         if(this->currency == "")
         {
-            this->currency = rhs.currency;
+            this->currency = rhs.cur();
             return *this;
         }
-
         cerr << "En specificerad valuta får ej ändras!" << endl;
         return *this;
     }
@@ -107,7 +93,6 @@ namespace monetary
         Money m;
         int increase_units{0};
         int hundreds_to_add{this->hundreds + rhs.hundreds};
-        cout << hundreds_to_add << endl;
 
         if(hundreds_to_add > 99)
         {
@@ -117,14 +102,9 @@ namespace monetary
 
         if(this->currency == rhs.currency)
         {
-            cout << "hej1" << endl;
             m.currency = this->currency;
-            cout << "hej2" << endl;
             m.units = this->units + rhs.units + increase_units;
-            cout << "hej3" << endl;
-            cout << hundreds_to_add;
             m.hundreds = hundreds_to_add;
-            cout << "hej4";
             return m;
         }
 
@@ -145,6 +125,7 @@ namespace monetary
         }
 
         cerr << "Du kan inte summera två objekt av olika valutor!" << endl;
+        return m;
         }
 
 

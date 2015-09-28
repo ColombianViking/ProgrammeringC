@@ -33,13 +33,16 @@ int main()
          << "\"m1 = m3\", m1 skrivs ut med print:" << endl;
     m1 = m3;
     m1.print(cout);
-    cout << endl;
-    monetary::Money m_test;
+    cout << endl << endl;
+    monetary::Money m_test{"SEK",3,3};
+    cout << "m_test består av:" << endl << m_test << endl;
     monetary::Money m4{"SEK",10,10};
-    monetary::Money m5{"SEK",10,10};
+    cout << "m4 består av:" << endl << m4 << endl;
+    monetary::Money m5{"SEK",0,95};
+    cout << "m5 består av:" << endl << m5 << endl;
+    cout << "\"m_test = m4 + m5\", m_test skrivs ut:" << endl;
     m_test = m4 + m5;
-    //cout << m_test.cur() << endl;
-    cout << m_test << endl;
+    cout << m_test << endl << endl;
 
     return 0;
 }
