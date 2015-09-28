@@ -28,7 +28,7 @@ public:
     Money& operator= (Money&);
 };
 
-std::ostream& operator<<(std::ostream&, Money&);
+std::ostream& operator<<(std::ostream&,const Money&);
 
 }
 #endif

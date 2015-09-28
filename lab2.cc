@@ -8,21 +8,21 @@ int main()
 {
 	cout << endl << "Konstruktorer:" << endl;
 	cout << endl << "m1:" << endl;
-	m1;
+	Money m1;
 	cout << "m2{100}" << endl;
 	Money m2{100};
 	cout << "m3{10,50}" << endl;
-	Money m3{10, 50);
+	Money m3{10, 50};
 	cout << "m4{\"SEK\"}" << endl;
 	Money m4{"SEK"};
 	cout << "m5{\"SEK\", 10}" << endl;
 	Money m5{"SEK", 10};
 	cout << "m6{\"FFR\", 100, 50}" << endl;
-	Money m6{"FFR", 100, 50);
+	Money m6{"FFR", 100, 50};
 	cout << "m7{m6}" << endl;
-	Money m7{m6);
+	Money m7{m6};
 	cout << "m8{m1}" << endl;
-	Money m8{m1);
+	Money m8{m1};
 	//Felaktiga initieringar läggs till senare
 	
 	
