@@ -35,6 +35,5 @@ int main()
 	cout << endl << m3 << endl;
 	m4.print(cout);
 	cout << endl << m4 << endl;
-
    	return 0;
 }
