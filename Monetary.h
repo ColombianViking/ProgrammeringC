@@ -26,6 +26,7 @@ public:
     int hun () {return hundreds;}
     void print(std::ostream&);
     Money& operator= (Money&);
+    Money& operator+ (Money&);
 };
 
 std::ostream& operator<<(std::ostream&, Money&);

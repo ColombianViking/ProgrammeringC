@@ -59,7 +59,9 @@ namespace monetary
 
     ostream& operator<< (ostream& o, Money& m)
     {
-        if(m.cur() != "")
+        m.print(o);
+        return o;
+        /* if(m.cur() != "")
         {
             o << m.cur() << " ";
         }
@@ -71,33 +73,79 @@ namespace monetary
             o << 0;
         }
         
-        return o << m.hun();
+        return o << m.hun();*/
     }
 
     Money& Money::operator= (Money& rhs)
     {
-        if(this->cur() == rhs.cur())
+        if(this->currency == rhs.currency)
         {
-            this->units = rhs.uni();
-            this->hundreds = rhs.hun();
+            this->units = rhs.units;
+            this->hundreds = rhs.hundreds;
             return *this;
         }
-        
-        if(rhs.cur() == "")
+
+        if(rhs.currency == "")
         {
-            this->units = rhs.uni();
-            this->hundreds = rhs.hun();
+            this->units = rhs.units;
+            this->hundreds = rhs.hundreds;
             return *this;
         }
-        
-        if(this->cur() == "")
+
+        if(this->currency == "")
         {
-            this->currency = rhs.cur();
+            this->currency = rhs.currency;
             return *this;
         }
 
         cerr << "En specificerad valuta får ej ändras!" << endl;
         return *this;
+    }
+
+     Money& Money::operator+ (Money& rhs)
+    {
+        Money m;
+        int increase_units{0};
+        int hundreds_to_add{this->hundreds + rhs.hundreds};
+        cout << hundreds_to_add << endl;
+
+        if(hundreds_to_add > 99)
+        {
+            increase_units = 1;
+            hundreds_to_add = hundreds_to_add - 100;
         }
+
+        if(this->currency == rhs.currency)
+        {
+            cout << "hej1" << endl;
+            m.currency = this->currency;
+            cout << "hej2" << endl;
+            m.units = this->units + rhs.units + increase_units;
+            cout << "hej3" << endl;
+            cout << hundreds_to_add;
+            m.hundreds = hundreds_to_add;
+            cout << "hej4";
+            return m;
+        }
+
+        if(this->currency == "")
+        {
+            m.currency = rhs.currency;
+            m.units = this->units + rhs.units + increase_units;
+            m.hundreds = hundreds_to_add;
+            return m;
+        }
+        
+        if(rhs.currency == "")
+        {
+            m.currency = this->currency;
+            m.units = this->units + rhs.units + increase_units;
+            m.hundreds = hundreds_to_add;
+            return m;
+        }
+
+        cerr << "Du kan inte summera två objekt av olika valutor!" << endl;
+        }
+
 
 }

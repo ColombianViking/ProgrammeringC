@@ -25,7 +25,7 @@ int main()
     cout << endl;
     cout << "m2 skrivs ut genom \"cout << m2\":" << endl;
     cout << m2 << endl;
-    monetary::Money m3{"SEK",20,2};
+    monetary::Money m3{"SEK",20,80};
     cout << endl << "m3 består av följande:" << endl
          << "Valuta: " << m3.cur() << endl 
          << "Enheter: " << m3.uni() << endl 
@@ -34,6 +34,12 @@ int main()
     m1 = m3;
     m1.print(cout);
     cout << endl;
+    monetary::Money m_test;
+    monetary::Money m4{"SEK",10,10};
+    monetary::Money m5{"SEK",10,10};
+    m_test = m4 + m5;
+    //cout << m_test.cur() << endl;
+    cout << m_test << endl;
 
     return 0;
 }
