@@ -43,6 +43,66 @@ int main()
     cout << "\"m_test = m4 + m5\", m_test skrivs ut:" << endl;
     m_test = m4 + m5;
     cout << m_test << endl << endl;
+    
+    monetary::Money m6{"SEK",4000};
+    cout << "m6 består av:" << endl << m6 << endl;
+    monetary::Money m7{"SEK",40,20};
+    cout << "m7 består av:" << endl << m7 << endl;
+    cout << endl << "m6 är följande, jämfört med m7:" << endl;
+    if(m6 == m7)
+    {
+        cout << "LIKA MED" << endl;
+    }
+    else
+    {
+        cout << "INTE LIKA MED" << endl;
+    }
+        
+    if(m6 < m7)
+    {
+        cout << "MINDRE" << endl;
+    }
+    else
+    {
+        cout << "INTE MINDRE" << endl;
+    }
 
+    if(m6 <= m7)
+    {
+        cout << "MINDRE ÄN ELLER LIKA MED" << endl;
+    }
+    else
+    {
+        cout << "INTE MINDRE ÄN ELLER LIKA MED" << endl;
+    }
+
+    if(m6 > m7)
+    {
+        cout << "STÖRRE" << endl;
+    }
+    else
+    {
+        cout << "INTE STÖRRE" << endl;
+    }
+
+    if(m6 >= m7)
+    {
+        cout << "STÖRRE ÄN ELLER LIKA MED" << endl;
+    }
+    else
+    {
+        cout << "INTE STÖRRE ÄN ELLER LIKA MED" << endl;
+    }
+
+    if(m6 != m7)
+    {
+        cout << "INTE LIKA MED" << endl;
+    }
+    else
+    {
+        cout << "LIKA MED" << endl;
+    }
+    
+    cout << endl;
     return 0;
 }

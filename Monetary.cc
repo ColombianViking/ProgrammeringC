@@ -88,7 +88,7 @@ namespace monetary
         return *this;
     }
 
-     Money& Money::operator+ (Money& rhs)
+    Money& Money::operator+ (Money& rhs)
     {
         Money m;
         int increase_units{0};
@@ -126,7 +126,129 @@ namespace monetary
 
         cerr << "Du kan inte summera två objekt av olika valutor!" << endl;
         return m;
+    }
+
+    bool Money::operator== (Money& rhs)
+    {
+        bool is_equal{false};
+        
+        if(this->currency == rhs.currency)
+        {
+            if((this->units == rhs.units) && (this->hundreds == rhs.hundreds))
+            {
+                is_equal = true;
+                return is_equal;
+            }
+
+            return is_equal;
         }
 
+        if((this->currency == "") || (rhs.currency == ""))
+        {
+            if((this->units == rhs.units) && (this->hundreds == rhs.hundreds))
+            {
+                is_equal = true;
+                return is_equal;
+            }
 
+            return is_equal;
+        }
+        
+        cerr << "Du kan inte jämföra två objekt av olika valutor!" << endl;
+        return is_equal;
+    }
+        
+    bool Money::operator< (Money& rhs)
+    {
+        bool is_less{false};
+        
+        if(this->currency == rhs.currency)
+        {
+            if(this->units < rhs.units)
+            {
+                is_less = true;
+                return is_less;
+            }
+            
+            if((this->units == rhs.units) && (this->hundreds < rhs.hundreds))
+            {
+                is_less = true;
+                return is_less;
+            }
+
+            return is_less;
+        }
+
+        if((this->currency == "") || (rhs.currency == ""))
+        {
+            if(this->units < rhs.units)
+            {
+                is_less = true;
+                return is_less;
+            }
+            
+            if((this->units == rhs.units) && (this->hundreds < rhs.hundreds))
+            {
+                is_less = true;
+                return is_less;
+            }
+
+            return is_less;
+        }
+
+        cerr << "Du kan inte jämföra två objekt av olika valutor!" << endl;
+        return is_less;
+    }
+
+    bool Money::operator<= (Money& rhs)
+    {
+        bool is_less_or_equal{false};
+        if((*this < rhs) || (*this == rhs))
+        {
+            is_less_or_equal = true;
+            return is_less_or_equal;
+        }
+        
+        return is_less_or_equal;
+    }
+
+    bool Money::operator> (Money& rhs)
+    {
+        bool is_greater{true};
+
+        if(*this <= rhs)
+        {
+            is_greater = false;
+            return is_greater;
+        }
+
+        return is_greater;
+    }
+
+    bool Money::operator>= (Money& rhs)
+    {
+        bool is_greater_or_equal{false};
+
+        if((*this > rhs) || (*this == rhs))
+        {
+            is_greater_or_equal = true;
+            return is_greater_or_equal;
+        }
+        
+        return is_greater_or_equal;
+    }
+
+    bool Money::operator!= (Money& rhs)
+    {
+        bool not_equal{true};
+        
+        if(*this == rhs)
+        {
+            not_equal = false;
+            return not_equal;
+        }
+        
+        return not_equal;
+    }
 }
+

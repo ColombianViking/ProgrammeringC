@@ -27,6 +27,12 @@ public:
     void print(std::ostream&);
     Money& operator= (Money&);
     Money& operator+ (Money&);
+    bool operator== (Money&);
+    bool operator< (Money&);
+    bool operator<= (Money&);
+    bool operator> (Money&);
+    bool operator>= (Money&);
+    bool operator!= (Money&);
 };
 
 std::ostream& operator<<(std::ostream&, Money&);
