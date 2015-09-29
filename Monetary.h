@@ -1,6 +1,7 @@
 //Monetary.h
 #include <string>
 #include <iostream>
+#include <stdexcept>
 #ifndef MONEY_H
 #define MONEY_H
 
@@ -27,15 +28,29 @@ public:
     void print(std::ostream&);
     Money& operator= (Money&);
     Money& operator+ (Money&);
-    bool operator== (Money&);
-    bool operator< (Money&);
-    bool operator<= (Money&);
-    bool operator> (Money&);
-    bool operator>= (Money&);
-    bool operator!= (Money&);
+    bool operator== (const Money&);
+    bool operator< (const Money&);
+    bool operator<= (const Money&);
+    bool operator> (const Money&);
+    bool operator>= (const Money&);
+    bool operator!= (const Money&);
+    Money& operator++ ();
+    Money& operator++ (int);
+    Money& operator-- ();
 };
 
 std::ostream& operator<<(std::ostream&, Money&);
 
 }
+
+class monetary_error : public std::logic_error
+{
+public:
+explicit monetary_error (const std::string& message) noexcept
+    : std::logic_error{message} {}
+    
+explicit monetary_error (const char* message) noexcept
+    : std::logic_error{message} {}
+};
+
 #endif
