@@ -181,6 +181,10 @@ int main()
         cout << "m14 -= m15, m14 skrivs ut:" << endl;
         m14 -= m15;
         cout << m14 << endl << endl;
+
+	monetary::Money m16{"SEK",12,34};
+	cin >> m16;
+	cout << m16 << endl;
     }
     catch (const monetary_error& message)
     {

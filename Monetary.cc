@@ -2,6 +2,7 @@
 #include "Monetary.h"
 #include <string>
 #include <iostream>
+#include <istream>
 #include <cctype>
 
 using namespace std;
@@ -384,39 +385,92 @@ namespace monetary
 
     istream& operator>> (istream& i_stream, Money& m)
     {
-        string curr{""};
+      string curr{"XXX"};
         char control;
-        int control_int{0};
         int units{0};
         int hundreds{0};
+	bool got_a_currency{false};
 
         i_stream >> ws;
-        i_stream.peek(control);
+        control = i_stream.peek();
+	if((! isalpha(control)) && (! isdigit(control)))
+	  {
+	    throw monetary_error{"Första funna tecknet vid inläsning är felaktigt!"};
+	  }
         
         if(isalpha(control))
         {
-            i_stream.get(curr,3);
+	    for(int i{0}; i < 3; ++i)
+	      {
+		i_stream.get(curr[i]);
+		if(! isalpha(curr[i]))
+		{
+		  throw monetary_error{"Felaktig längd på valuta vid inläsning!"};
+		}
+	      }
+	    got_a_currency = true;
             i_stream >> ws;
-            i_stream.peek(control);
+            control = i_stream.peek();
         }
 
         if(isdigit(control))
         {
+	  i_stream.get(control);
             units = control - '0';
-            while(isdigit(i_stream.peek(control)))
+	    control = i_stream.peek();
+
+            while(isdigit(control))
             {
-                units = units*10;
-                units = units + (control - '0');
+	      i_stream.get(control);
+	      units = units*10;
+	      units = units + (control - '0');
+	      control = i_stream.peek();
             }
         }
+	else
+	  {
+	    throw monetary_error{"Antal enheter har inte fått ett värde vid inläsning!"};
+	  }
         
-        if(control = '.')
-        {
-            
-        }
+        if(control == '.')
+	  {
+	    i_stream.get(control);
+	    control = i_stream.peek();
+	    if(isdigit(control))
+	      {
+		i_stream.get(control);
+		hundreds = control - '0';
+		control = i_stream.peek();
 
-        Money m_temp{curr,units,hundreds};
-        m = m_temp;
+		while(isdigit(control))
+		  {
+		    i_stream.get(control);
+		    hundreds = hundreds*10;
+		    hundreds = hundreds + (control - '0');
+		    if(hundreds > 99)
+		      {
+			throw monetary_error{"Antal hundradelar har fått ett felaktigt värde vid inläsning!"};
+		      }
+		    control = i_stream.peek();
+		  }
+	      }
+	    else
+	      {
+		throw monetary_error{"Felaktigt värde på hundradelar vid inläsning!"};
+	      }
+	  }
+    
+	if(got_a_currency)
+	  {
+	    Money m_temp{curr,units,hundreds};
+	    m = m_temp;
+	  }
+	else
+	  {
+	    Money m_temp{"",units,hundreds};
+	    m = m_temp;
+	  }
+ 
         return i_stream;
     }
 }
