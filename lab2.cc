@@ -45,10 +45,10 @@ int main()
         m1.print(cout);
         cout << endl << endl;
 
-        monetary::Money m_test{"SEK",3,3};
+        monetary::Money m_add1{"SEK",3,3};
 
 
-        cout << "m_test består av:" << endl << m_test << endl;
+        cout << "m_add1 består av:" << endl << m_add1 << endl;
 
         monetary::Money m4{"SEK",10,10};
 
@@ -60,12 +60,12 @@ int main()
  
 
         cout << "m5 består av:" << endl << m5 << endl;
-        cout << "\"m_test = m4 + m5\", m_test skrivs ut:" << endl;
+        cout << "\"m_add1 = m4 + m5\", m_add1 skrivs ut:" << endl;
    
-        m_test = m4 + m5;
+        m_add1 = m4 + m5;
   
      
-        cout << m_test << endl << endl;
+        cout << m_add1 << endl << endl;
     
 
         monetary::Money m6{"SEK",4000};
@@ -129,33 +129,58 @@ int main()
         {
             cout << "LIKA MED" << endl;
         }
-    
+        cout << endl;
   
         monetary::Money m8{"SEK",10,99};
-  
+        cout << "m8 består av:" << endl << m8 << endl;
         ++m8;
-        cout << m8 << endl;
+        cout << "++m8, m8 skrivs ut:" << endl;
+        cout << m8 << endl << endl;
 
-   
         monetary::Money m9{"SEK",14,14};
- 
+        cout << "m9 består av:" << endl << m9 << endl;
         monetary::Money m10{"SEK",0,0};
- 
-
+        cout << "m10 består av:" << endl << m10 << endl;
         m10 = m9++;
+        cout << "m10 = m9++, m10 skrivs ut:" << endl;
         cout << m10 << endl;
+        cout << "m9 skrivs ut:" << endl;
         cout << m9 << endl;
-
         cout << endl;
+
         monetary::Money m11{"SEK",10,0};
+        cout << "m11 består av:" << endl << m11 << endl;
         --m11;
-        cout << m11 << endl;
+        cout << "--m11, m11 skrivs ut:" << endl;
+        cout << m11 << endl << endl;
 
         monetary::Money m12{"SEK",0,0};
+        cout << "m12 består av:" << endl << m12 << endl;
         monetary::Money m13{"SEK",4};
+        cout << "m13 består av:" << endl << m13 << endl;
         m12 = m13--;
+        cout << "m12 = m13--, m12 skrivs ut:" << endl;
         cout << m12 << endl;
-        cout << m13 << endl;
+        cout << "m13 skrivs ut:" << endl;
+        cout << m13 << endl << endl;
+
+        cout << "m12 += m13, m12 skrivs ut:" << endl;
+        m12 += m13;
+        cout << m12 << endl << endl;
+
+        monetary::Money m_sub1{"SEK",0,0};
+        cout << "m_sub1 består av:" << endl << m_sub1 << endl;
+        monetary::Money m14{"SEK",10,20};
+        cout << "m14 består av:" << endl << m14 << endl;
+        monetary::Money m15{"SEK",5,30};
+        cout << "m15 består av:" << endl << m15 << endl;
+        m_sub1 = m14 - m15;
+        cout << "\"m_sub1 = m14 - m15\", m_sub1 skrivs ut:" << endl;
+        cout << m_sub1 << endl << endl;
+        
+        cout << "m14 -= m15, m14 skrivs ut:" << endl;
+        m14 -= m15;
+        cout << m14 << endl << endl;
     }
     catch (const monetary_error& message)
     {

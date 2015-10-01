@@ -319,5 +319,66 @@ namespace monetary
 
         return m;
     }
+
+    Money& Money::operator+= (Money& rhs)
+    {
+        *this = *this + rhs;
+        return *this;
+    }
+
+    Money& Money::operator- (Money& rhs)
+    {
+        Money m;
+        int decrease_units{0};
+        int hundreds_to_add{this->hundreds - rhs.hundreds};
+
+        if((this->units - rhs.units) < 0)
+        {
+            throw monetary_error{"Subtraktion får ej resultera i ett negativt värde!"};
+        }
+        
+        if(((this->units - rhs.units) == 0) && hundreds_to_add < 0)
+        {
+            throw monetary_error{"Subtraktion får ej resultera i ett negativt värde!"};
+        }
+       
+        if(hundreds_to_add < 0)
+        {
+            decrease_units = 1;
+            hundreds_to_add = hundreds_to_add + 100;
+        }
+
+        if(this->currency == rhs.currency)
+        {
+            m.currency = this->currency;
+            m.units = this->units - rhs.units - decrease_units;
+            m.hundreds = hundreds_to_add;
+            return m;
+        }
+
+        if(this->currency == "")
+        {
+            m.currency = rhs.currency;
+            m.units = this->units - rhs.units - decrease_units;
+            m.hundreds = hundreds_to_add;
+            return m;
+        }
+        
+        if(rhs.currency == "")
+        {
+            m.currency = this->currency;
+            m.units = this->units - rhs.units - decrease_units;
+            m.hundreds = hundreds_to_add;
+            return m;
+        }
+
+        throw monetary_error{"Du kan inte subtrahera två objekt av olika valutor!"};
+    }
+
+    Money& Money::operator-= (Money& rhs)
+    {
+        *this = *this - rhs;
+        return *this;
+    }
 }
 

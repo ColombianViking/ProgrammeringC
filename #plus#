@@ -1,0 +1,38 @@
+Money& Money::operator+ (Money& rhs)
+    {
+        Money m;
+        int increase_units{0};
+        int hundreds_to_add{this->hundreds + rhs.hundreds};
+       
+        if(hundreds_to_add > 99)
+        {
+            increase_units = 1;
+            hundreds_to_add = hundreds_to_add - 100;
+        }
+
+        if(this->currency == rhs.currency)
+        {
+            m.currency = this->currency;
+            m.units = this->units + rhs.units + increase_units;
+            m.hundreds = hundreds_to_add;
+            return m;
+        }
+
+        if(this->currency == "")
+        {
+            m.currency = rhs.currency;
+            m.units = this->units + rhs.units + increase_units;
+            m.hundreds = hundreds_to_add;
+            return m;
+        }
+        
+        if(rhs.currency == "")
+        {
+            m.currency = this->currency;
+            m.units = this->units + rhs.units + increase_units;
+            m.hundreds = hundreds_to_add;
+            return m;
+        }
+
+        throw monetary_error{"Du kan inte summera två objekt av olika valutor!"};
+    }
