@@ -150,6 +150,12 @@ int main()
         monetary::Money m11{"SEK",10,0};
         --m11;
         cout << m11 << endl;
+
+        monetary::Money m12{"SEK",0,0};
+        monetary::Money m13{"SEK",4};
+        m12 = m13--;
+        cout << m12 << endl;
+        cout << m13 << endl;
     }
     catch (const monetary_error& message)
     {

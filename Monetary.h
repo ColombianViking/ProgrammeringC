@@ -37,6 +37,7 @@ public:
     Money& operator++ ();
     Money& operator++ (int);
     Money& operator-- ();
+    Money& operator-- (int);
 };
 
 std::ostream& operator<<(std::ostream&, Money&);

@@ -298,5 +298,26 @@ namespace monetary
 
         return *this;
     }
+
+    Money& Money::operator-- (int)
+    {
+        Money m{*this};
+        if((this->hundreds == 0) && (this->units == 0))
+        {
+            throw monetary_error{"Nedstegning får ej ge ett negativt värde!"};
+        }
+        
+        if(this->hundreds == 0)
+        {
+            this->units = this->units - 1;
+            this->hundreds = 99;
+        }
+        else
+        {
+            this->hundreds = this->hundreds - 1;
+        }
+
+        return m;
+    }
 }
 
