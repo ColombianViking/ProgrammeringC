@@ -2,7 +2,6 @@
 #include "Monetary.h"
 #include <string>
 #include <iostream>
-#include <istream>
 #include <cctype>
 
 using namespace std;
@@ -405,9 +404,14 @@ namespace monetary
 		i_stream.get(curr[i]);
 		if(! isalpha(curr[i]))
 		{
-		  throw monetary_error{"Felaktig längd på valuta vid inläsning!"};
+		  throw monetary_error{"Valutan måste bestå av tre bokstäver och efterföljas av minst ett mellanslag!"};
 		}
 	      }
+            control = i_stream.peek();
+            if(! (control == ' '))
+            {
+                throw monetary_error{"Valutan måste bestå av tre bokstäver och efterföljas av minst ett mellanslag!"};
+            }
 	    got_a_currency = true;
             i_stream >> ws;
             control = i_stream.peek();
@@ -422,7 +426,7 @@ namespace monetary
             while(isdigit(control))
             {
 	      i_stream.get(control);
-	      units = units*10;
+	      units = units * 10;
 	      units = units + (control - '0');
 	      control = i_stream.peek();
             }
@@ -442,21 +446,20 @@ namespace monetary
 		hundreds = control - '0';
 		control = i_stream.peek();
 
-		while(isdigit(control))
+		if(isdigit(control))
 		  {
 		    i_stream.get(control);
-		    hundreds = hundreds*10;
+		    hundreds = hundreds * 10;
 		    hundreds = hundreds + (control - '0');
-		    if(hundreds > 99)
-		      {
-			throw monetary_error{"Antal hundradelar har fått ett felaktigt värde vid inläsning!"};
-		      }
-		    control = i_stream.peek();
 		  }
+                else
+                {
+                    hundreds = hundreds * 10;
+                }
 	      }
 	    else
 	      {
-		throw monetary_error{"Felaktigt värde på hundradelar vid inläsning!"};
+		throw monetary_error{"Felaktigt värde på antal hundradelar vid inläsning!"};
 	      }
 	  }
     

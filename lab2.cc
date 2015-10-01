@@ -183,8 +183,10 @@ int main()
         cout << m14 << endl << endl;
 
 	monetary::Money m16{"SEK",12,34};
+        cout << "m16 består av:" << endl << m16 << endl;
+        cout << "Vad vill du ändra m16 till?" << endl;
 	cin >> m16;
-	cout << m16 << endl;
+        cout << "m16 består nu av:" << endl << m16 << endl;
     }
     catch (const monetary_error& message)
     {
