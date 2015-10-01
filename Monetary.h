@@ -44,6 +44,7 @@ public:
 };
 
 std::ostream& operator<<(std::ostream&, Money&);
+std::istream& operator>>(std::istream&, Money&);
 
 }
 

@@ -2,6 +2,7 @@
 #include "Monetary.h"
 #include <string>
 #include <iostream>
+#include <cctype>
 
 using namespace std;
 
@@ -379,6 +380,44 @@ namespace monetary
     {
         *this = *this - rhs;
         return *this;
+    }
+
+    istream& operator>> (istream& i_stream, Money& m)
+    {
+        string curr{""};
+        char control;
+        int control_int{0};
+        int units{0};
+        int hundreds{0};
+
+        i_stream >> ws;
+        i_stream.peek(control);
+        
+        if(isalpha(control))
+        {
+            i_stream.get(curr,3);
+            i_stream >> ws;
+            i_stream.peek(control);
+        }
+
+        if(isdigit(control))
+        {
+            units = control - '0';
+            while(isdigit(i_stream.peek(control)))
+            {
+                units = units*10;
+                units = units + (control - '0');
+            }
+        }
+        
+        if(control = '.')
+        {
+            
+        }
+
+        Money m_temp{curr,units,hundreds};
+        m = m_temp;
+        return i_stream;
     }
 }
 
