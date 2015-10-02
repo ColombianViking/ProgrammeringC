@@ -1,4 +1,11 @@
-//Monetary.cc
+/*
+ * FILNAMN:       Monetary.cc
+ * LABORATION:    2
+ * PROGRAMMERARE: Jesper Karjalainen, 930311-4731, Y3c
+ *                John Stynsberg, 941219-9359, Y3c
+ * DATUM:         2015-10-02
+ */
+
 #include "Monetary.h"
 #include <string>
 #include <iostream>
@@ -9,6 +16,11 @@ using namespace std;
 namespace monetary
 {
 
+/*
+ * FUNKTION Money::Money (string a, int b, int c)
+ *
+ * Skapar ett Money-objekt med valutan "a", "b" enheter och "c" hundradelar.
+ */
     Money::Money (string a, int b, int c)
     {
         if(a.size() != 3 && a.size() != 0)
@@ -23,13 +35,19 @@ namespace monetary
 
         if(c < 0 || c > 99)
         {
-            throw monetary_error{"Antal hundradelar har fått ett ogiltigt värde!"};
+            throw monetary_error{"Antal hundradelar "
+                    "har fått ett ogiltigt värde!"};
         }
         currency = a;
         units = b;
         hundreds = c;
     }
-    
+  
+/*
+ * FUNKTION Money::Money (Money& m)
+ *
+ * Skapar ett Money-objekt med samma värden som det existerande objektet "m".
+ */
     Money::Money (Money& m)
     {
         currency = m.currency;
@@ -37,6 +55,11 @@ namespace monetary
         hundreds = m.hundreds;
     }
 
+/*
+ * FUNKTION void Money::print(ostream& o_stream)
+ *
+ * Skriver ut ett Money-objekts värden till utströmmen "o_stream".
+ */
     void Money::print(ostream& o_stream)
     {
         if(this->cur() != "")
@@ -56,12 +79,22 @@ namespace monetary
         return;
     } 
 
-    ostream& operator<< (ostream& o, Money& m)
+/*
+ * FUNKTION Money::Money (string a, int b, int c)
+ *
+ * Skriver ut Money-objektet "m"'s värden till utströmmen "o_stream".
+ */
+    ostream& operator<< (ostream& o_stream, Money& m)
     {
-        m.print(o);
-        return o;
+        m.print(o_stream);
+        return o_stream;
     }
 
+/*
+ * FUNKTION Money& Money::operator= (Money& rhs)
+ *
+ * Utför tilldelningen "m1 = m2". Resultatet är ett lvalue.
+ */
     Money& Money::operator= (Money& rhs)
     {
         if(this->currency == rhs.currency)
@@ -89,6 +122,11 @@ namespace monetary
       
     }
 
+/*
+ * FUNKTION Money& Money::operator+ (Money& rhs)
+ *
+ * Utför additionen "m1 + m2". Resultatet är ett rvalue.
+ */
     Money& Money::operator+ (Money& rhs)
     {
         Money m;
@@ -125,9 +163,15 @@ namespace monetary
             return m;
         }
 
-        throw monetary_error{"Du kan inte summera två objekt av olika valutor!"};
+        throw monetary_error{"Du kan inte summera två objekt "
+                "av olika valutor!"};
     }
 
+/*
+ * FUNKTION bool Money::operator== (const Money& rhs)
+ *
+ * Utför jämförelsen "m1 == m2".
+ */
     bool Money::operator== (const Money& rhs)
     {
         bool is_equal{false};
@@ -154,9 +198,15 @@ namespace monetary
             return is_equal;
         }
         
-        throw monetary_error{"Du kan inte jämföra två objekt av olika valutor!"};
+        throw monetary_error{"Du kan inte jämföra två objekt "
+                "av olika valutor!"};
     }
         
+/*
+ * FUNKTION bool Money::operator< (const Money& rhs)
+ *
+ * Utför jämförelsen "m1 < m2".
+ */
     bool Money::operator< (const Money& rhs)
     {
         bool is_less{false};
@@ -195,10 +245,16 @@ namespace monetary
             return is_less;
         }
 
-        throw monetary_error{"Du kan inte jämföra två objekt av olika valutor!"};
+        throw monetary_error{"Du kan inte jämföra två objekt "
+                "av olika valutor!"};
         
     }
 
+/*
+ * FUNKTION bool Money::operator<= (const Money& rhs)
+ *
+ * Utför jämförelsen "m1 <= m2".
+ */
     bool Money::operator<= (const Money& rhs)
     {
         bool is_less_or_equal{false};
@@ -211,6 +267,11 @@ namespace monetary
         return is_less_or_equal;
     }
 
+/*
+ * FUNKTION bool Money::operator> (const Money& rhs)
+ *
+ * Utför jämförelsen "m1 > m2".
+ */
     bool Money::operator> (const Money& rhs)
     {
         bool is_greater{true};
@@ -224,6 +285,11 @@ namespace monetary
         return is_greater;
     }
 
+/*
+ * FUNKTION bool Money::operator >= (const Money& rhs)
+ *
+ * Utför jämförelsen "m1 >= m2".
+ */
     bool Money::operator>= (const Money& rhs)
     {
         bool is_greater_or_equal{false};
@@ -237,6 +303,11 @@ namespace monetary
         return is_greater_or_equal;
     }
 
+/*
+ * FUNKTION bool Money::operator!= (const Money& rhs)
+ *
+ * Utför jämförelsen "m1 != m2".
+ */
     bool Money::operator!= (const Money& rhs)
     {
         bool not_equal{true};
@@ -250,6 +321,12 @@ namespace monetary
         return not_equal;
     }
 
+/*
+ * FUNKTION Money& Money::operator++ ()
+ *
+ * Ökar ett Money-objekts hundradelar med 1. Resultatet är ett lvalue.
+ * (Prefix ++).
+ */
     Money& Money::operator++ ()
     {
         if(this->hundreds == 99)
@@ -265,6 +342,12 @@ namespace monetary
         return *this;
     }
 
+/*
+ * FUNKTION Money& Money::operator++ (int)
+ *
+ * Ökar ett Money-objekts hundradelar med 1. Resultatet är ett rvalue av
+ * objektets värde före stegningen. (Postfix ++).
+ */
     Money& Money::operator++ (int)
     {
         Money m{*this};
@@ -280,6 +363,12 @@ namespace monetary
         return m;
     }
     
+/*
+ * FUNKTION Money& Money::operator-- ()
+ *
+ * Sänker ett Money-objekts hundradelar med 1. Resultatet är ett lvalue.
+ * (Prefix --).
+ */
     Money& Money::operator-- ()
     {
         if((this->hundreds == 0) && (this->units == 0))
@@ -300,6 +389,12 @@ namespace monetary
         return *this;
     }
 
+/*
+ * FUNKTION Money& Money::operator-- (int)
+ *
+ * Sänker ett Money-objekts hundradelar med 1. Resultatet är ett rvalue av
+ * objektets värde före stegningen. (Postfix --).
+ */
     Money& Money::operator-- (int)
     {
         Money m{*this};
@@ -321,12 +416,22 @@ namespace monetary
         return m;
     }
 
+/*
+ * FUNKTION Money& Money::operator+= (Money& rhs)
+ *
+ * Utför den sammansatta tilldelningen "m1 = m1 + m2".
+ */
     Money& Money::operator+= (Money& rhs)
     {
         *this = *this + rhs;
         return *this;
     }
 
+/*
+ * FUNKTION Money& Money::operator- (Money& rhs)
+ *
+ * Utför subtraktionen "m1 - m2". Resultatet är ett rvalue.
+ */
     Money& Money::operator- (Money& rhs)
     {
         Money m;
@@ -335,12 +440,14 @@ namespace monetary
 
         if((this->units - rhs.units) < 0)
         {
-            throw monetary_error{"Subtraktion får ej resultera i ett negativt värde!"};
+            throw monetary_error{"Subtraktion får ej resultera "
+                    "i ett negativt värde!"};
         }
         
         if(((this->units - rhs.units) == 0) && hundreds_to_add < 0)
         {
-            throw monetary_error{"Subtraktion får ej resultera i ett negativt värde!"};
+            throw monetary_error{"Subtraktion får ej resultera "
+                    "i ett negativt värde!"};
         }
        
         if(hundreds_to_add < 0)
@@ -373,18 +480,30 @@ namespace monetary
             return m;
         }
 
-        throw monetary_error{"Du kan inte subtrahera två objekt av olika valutor!"};
+        throw monetary_error{"Du kan inte subtrahera två objekt "
+                "av olika valutor!"};
     }
 
+/*
+ * FUNKTION Money& Money::operator-= (Money& rhs)
+ *
+ * Utför den sammansatta tilldelningen "m1 = m1 - m2".
+ */
     Money& Money::operator-= (Money& rhs)
     {
         *this = *this - rhs;
         return *this;
     }
 
+/*
+ * FUNKTION istream& operator>> (istream& i_stream, Money& m)
+ *
+ * Tillåter användaren att ändra på det existerande Money-objektet "m"
+ * via inläsning från inströmmen "i_stream".
+ */
     istream& operator>> (istream& i_stream, Money& m)
     {
-      string curr{"XXX"};
+        string curr{"XXX"};
         char control;
         int units{0};
         int hundreds{0};
@@ -392,26 +511,34 @@ namespace monetary
 
         i_stream >> ws;
         control = i_stream.peek();
+
 	if((! isalpha(control)) && (! isdigit(control)))
-	  {
-	    throw monetary_error{"Första funna tecknet vid inläsning är felaktigt!"};
-	  }
+        {
+	    throw monetary_error{"Första funna tecknet vid inläsning "
+                    "är felaktigt!"};
+        }
         
         if(isalpha(control))
         {
 	    for(int i{0}; i < 3; ++i)
-	      {
+            {
 		i_stream.get(curr[i]);
+
 		if(! isalpha(curr[i]))
 		{
-		  throw monetary_error{"Valutan måste bestå av tre bokstäver och efterföljas av minst ett mellanslag!"};
+                    throw monetary_error{"Valutan måste bestå av tre bokstäver "
+                            "och efterföljas av minst ett mellanslag!"};
 		}
-	      }
+            }
+
             control = i_stream.peek();
+
             if(! (control == ' '))
             {
-                throw monetary_error{"Valutan måste bestå av tre bokstäver och efterföljas av minst ett mellanslag!"};
+                throw monetary_error{"Valutan måste bestå av tre bokstäver "
+                        "och efterföljas av minst ett mellanslag!"};
             }
+
 	    got_a_currency = true;
             i_stream >> ws;
             control = i_stream.peek();
@@ -419,60 +546,63 @@ namespace monetary
 
         if(isdigit(control))
         {
-	  i_stream.get(control);
+            i_stream.get(control);
             units = control - '0';
 	    control = i_stream.peek();
 
             while(isdigit(control))
             {
-	      i_stream.get(control);
-	      units = units * 10;
-	      units = units + (control - '0');
-	      control = i_stream.peek();
+                i_stream.get(control);
+                units = units * 10;
+                units = units + (control - '0');
+                control = i_stream.peek();
             }
         }
 	else
-	  {
-	    throw monetary_error{"Antal enheter har inte fått ett värde vid inläsning!"};
-	  }
+        {
+	    throw monetary_error{"Antal enheter har inte fått ett värde "
+                    "vid inläsning!"};
+        }
         
         if(control == '.')
-	  {
+        {
 	    i_stream.get(control);
 	    control = i_stream.peek();
+
 	    if(isdigit(control))
-	      {
+            {
 		i_stream.get(control);
 		hundreds = control - '0';
 		control = i_stream.peek();
 
 		if(isdigit(control))
-		  {
+                {
 		    i_stream.get(control);
 		    hundreds = hundreds * 10;
 		    hundreds = hundreds + (control - '0');
-		  }
+                }
                 else
                 {
                     hundreds = hundreds * 10;
                 }
-	      }
+            }
 	    else
-	      {
-		throw monetary_error{"Felaktigt värde på antal hundradelar vid inläsning!"};
-	      }
-	  }
+            {
+		throw monetary_error{"Felaktigt värde på antal hundradelar "
+                        "vid inläsning!"};
+            }
+        }
     
 	if(got_a_currency)
-	  {
+        {
 	    Money m_temp{curr,units,hundreds};
 	    m = m_temp;
-	  }
+        }
 	else
-	  {
+        {
 	    Money m_temp{"",units,hundreds};
 	    m = m_temp;
-	  }
+        }
  
         return i_stream;
     }
