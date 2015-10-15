@@ -196,8 +196,11 @@ int main()
         cout << "Vad vill du ändra m16 till?" << endl;
 	cin >> m16;
         cout << "m16 består nu av:" << endl << m16 << endl;
+        cout << "m14 vill ha nytt värde, häjpl." << endl;
+        cin >> m14;
+        cout << m14 << endl;
     }
-    catch (const monetary_error& message)
+    catch (const monetary::monetary_error& message)
     {
         cout << message.what() << endl;
     }

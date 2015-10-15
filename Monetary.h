@@ -12,22 +12,25 @@ class Money
 {
 private:
     std::string currency;
-    int units, hundreds; 
+    int units;
+    int hundreds; 
 
 public:
     Money () : Money("", 0, 0) {}
     Money (int b) : Money("", b, 0) {}
     Money (int b, int c) : Money("", b, c) {}
-    Money (std::string a) : Money(a, 0, 0) {}
-    Money (std::string a, int b) : Money(a, b, 0) {}
-    Money (Money&);
-    Money (std::string, int, int);
-    std::string cur () {return currency;}
-    int uni () {return units;} 
-    int hun () {return hundreds;}
-    void print(std::ostream&);
-    Money& operator= (Money&);
-    Money& operator+ (Money&);
+    Money (const std::string& a) : Money(a, 0, 0) {}
+    Money (const std::string& a, int b) : Money(a, b, 0) {}
+    Money (const Money&);
+    Money (const std::string&, int, int);
+    Money(Money&& m) noexcept = default;
+    ~Money() = default;
+    std::string cur () const {return currency;}
+    int uni () const {return units;}
+    int hun () const {return hundreds;}
+    std::ostream& print(std::ostream&) const;
+    Money& operator= (const Money&);
+    Money operator+ (const Money&);
     bool operator== (const Money&);
     bool operator< (const Money&);
     bool operator<= (const Money&);
@@ -35,18 +38,18 @@ public:
     bool operator>= (const Money&);
     bool operator!= (const Money&);
     Money& operator++ ();
-    Money& operator++ (int);
+    Money operator++ (int);
     Money& operator-- ();
-    Money& operator-- (int);
-    Money& operator+= (Money&);
-    Money& operator- (Money&);
-    Money& operator-= (Money&);
+    Money operator-- (int);
+    Money& operator+= (const Money&);
+    Money operator- (const Money&);
+    Money& operator-= (const Money&);
+    
 };
 
-std::ostream& operator<<(std::ostream&, Money&);
+std::ostream& operator<<(std::ostream&, const Money&);
 std::istream& operator>>(std::istream&, Money&);
 
-}
 
 class monetary_error : public std::logic_error
 {
@@ -57,5 +60,6 @@ explicit monetary_error (const std::string& message) noexcept
 explicit monetary_error (const char* message) noexcept
     : std::logic_error{message} {}
 };
+}
 
 #endif

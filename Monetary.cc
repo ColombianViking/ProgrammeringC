@@ -17,11 +17,11 @@ namespace monetary
 {
 
 /*
- * FUNKTION Money::Money (string a, int b, int c)
+ * FUNKTION Money::Money (const string& a, int b, int c)
  *
  * Skapar ett Money-objekt med valutan "a", "b" enheter och "c" hundradelar.
  */
-    Money::Money (string a, int b, int c)
+    Money::Money (const string& a, int b, int c)
     {
         if(a.size() != 3 && a.size() != 0)
         {
@@ -44,11 +44,11 @@ namespace monetary
     }
   
 /*
- * FUNKTION Money::Money (Money& m)
+ * FUNKTION Money::Money (const Money& m)
  *
  * Skapar ett Money-objekt med samma värden som det existerande objektet "m".
  */
-    Money::Money (Money& m)
+    Money::Money (const Money& m)
     {
         currency = m.currency;
         units = m.units;
@@ -60,23 +60,23 @@ namespace monetary
  *
  * Skriver ut ett Money-objekts värden till utströmmen "o_stream".
  */
-    void Money::print(ostream& o_stream)
+    ostream& Money::print(ostream& o_stream) const
     {
-        if(this->cur() != "")
+        if(currency != "")
         {
-            o_stream << this->cur() << " ";
+            o_stream << currency << " ";
         }
        
-        o_stream << this->uni() << ".";
+        o_stream << units << ".";
 
-        if(this->hun() < 10)
+        if(hundreds < 10)
         {
             o_stream << 0;
         }
 
-        o_stream << this->hun();
+        o_stream << hundreds;
 
-        return;
+        return o_stream;
     } 
 
 /*
@@ -84,10 +84,9 @@ namespace monetary
  *
  * Skriver ut Money-objektet "m"'s värden till utströmmen "o_stream".
  */
-    ostream& operator<< (ostream& o_stream, Money& m)
+    ostream& operator<< (ostream& o_stream, const Money& m)
     {
-        m.print(o_stream);
-        return o_stream;
+        return m.print(o_stream);
     }
 
 /*
@@ -95,27 +94,27 @@ namespace monetary
  *
  * Utför tilldelningen "m1 = m2". Resultatet är ett lvalue.
  */
-    Money& Money::operator= (Money& rhs)
+    Money& Money::operator= (const Money& rhs)
     {
-        if(this->currency == rhs.currency)
+        if(currency == rhs.currency)
         {
-            this->units = rhs.units;
-            this->hundreds = rhs.hundreds;
+            units = rhs.units;
+            hundreds = rhs.hundreds;
             return *this;
         }
 
         if(rhs.currency == "")
         {
-            this->units = rhs.units;
-            this->hundreds = rhs.hundreds;
+            units = rhs.units;
+            hundreds = rhs.hundreds;
             return *this;
         }
 
-        if(this->currency == "")
+        if(currency == "")
         {
-            this->units = rhs.units;
-            this->hundreds = rhs.hundreds;
-            this->currency = rhs.cur();
+            units = rhs.units;
+            hundreds = rhs.hundreds;
+            currency = rhs.currency;
             return *this;
         }
         throw monetary_error{"En specificerad valuta får ej ändras!"};
@@ -127,44 +126,19 @@ namespace monetary
  *
  * Utför additionen "m1 + m2". Resultatet är ett rvalue.
  */
-    Money& Money::operator+ (Money& rhs)
+    Money Money::operator+ (const Money& rhs)
     {
-        Money& m = * new Money;
-        int increase_units{0};
-        int hundreds_to_add{this->hundreds + rhs.hundreds};
-       
-        if(hundreds_to_add > 99)
+        Money m;
+        if(! (currency == rhs.currency))
         {
-            increase_units = 1;
-            hundreds_to_add = hundreds_to_add - 100;
-        }
-
-        if(this->currency == rhs.currency)
-        {
-            m.currency = this->currency;
-            m.units = this->units + rhs.units + increase_units;
-            m.hundreds = hundreds_to_add;
-            return m;
-        }
-
-        if(this->currency == "")
-        {
-            m.currency = rhs.currency;
-            m.units = this->units + rhs.units + increase_units;
-            m.hundreds = hundreds_to_add;
-            return m;
+            throw monetary_error{"Du kan inte summera två objekt "
+                    "av olika valutor!"};
         }
         
-        if(rhs.currency == "")
-        {
-            m.currency = this->currency;
-            m.units = this->units + rhs.units + increase_units;
-            m.hundreds = hundreds_to_add;
-            return m;
-        }
-
-        throw monetary_error{"Du kan inte summera två objekt "
-                "av olika valutor!"};
+        m.units = units + rhs.units + (hundreds + rhs.hundreds)/100;
+        m.hundreds = (hundreds + rhs.hundreds) % 100;
+     
+        return m;
     }
 
 /*
@@ -174,28 +148,14 @@ namespace monetary
  */
     bool Money::operator== (const Money& rhs)
     {
-        bool is_equal{false};
-        
-        if(this->currency == rhs.currency)
+        if(currency == rhs.currency)
         {
-            if((this->units == rhs.units) && (this->hundreds == rhs.hundreds))
-            {
-                is_equal = true;
-                return is_equal;
-            }
-
-            return is_equal;
+            return((units == rhs.units) && (hundreds == rhs.hundreds));
         }
 
-        if((this->currency == "") || (rhs.currency == ""))
+        if((currency == "") || (rhs.currency == ""))
         {
-            if((this->units == rhs.units) && (this->hundreds == rhs.hundreds))
-            {
-                is_equal = true;
-                return is_equal;
-            }
-
-            return is_equal;
+            return((units == rhs.units) && (hundreds == rhs.hundreds));
         }
         
         throw monetary_error{"Du kan inte jämföra två objekt "
@@ -209,45 +169,18 @@ namespace monetary
  */
     bool Money::operator< (const Money& rhs)
     {
-        bool is_less{false};
-        
-        if(this->currency == rhs.currency)
+        if(currency == rhs.currency)
         {
-            if(this->units < rhs.units)
-            {
-                is_less = true;
-                return is_less;
-            }
-            
-            if((this->units == rhs.units) && (this->hundreds < rhs.hundreds))
-            {
-                is_less = true;
-                return is_less;
-            }
-
-            return is_less;
+            return((units < rhs.units) || ((units == rhs.units) && (hundreds < rhs.hundreds)));
         }
 
-        if((this->currency == "") || (rhs.currency == ""))
+        if((currency == "") || (rhs.currency == ""))
         {
-            if(this->units < rhs.units)
-            {
-                is_less = true;
-                return is_less;
-            }
-            
-            if((this->units == rhs.units) && (this->hundreds < rhs.hundreds))
-            {
-                is_less = true;
-                return is_less;
-            }
-
-            return is_less;
+            return((units < rhs.units) || ((units == rhs.units) && (hundreds < rhs.hundreds)));
         }
 
         throw monetary_error{"Du kan inte jämföra två objekt "
-                "av olika valutor!"};
-        
+                "av olika valutor!"};   
     }
 
 /*
@@ -257,14 +190,7 @@ namespace monetary
  */
     bool Money::operator<= (const Money& rhs)
     {
-        bool is_less_or_equal{false};
-        if((*this < rhs) || (*this == rhs))
-        {
-            is_less_or_equal = true;
-            return is_less_or_equal;
-        }
-        
-        return is_less_or_equal;
+        return *this < rhs || *this == rhs;
     }
 
 /*
@@ -274,15 +200,7 @@ namespace monetary
  */
     bool Money::operator> (const Money& rhs)
     {
-        bool is_greater{true};
-
-        if(*this <= rhs)
-        {
-            is_greater = false;
-            return is_greater;
-        }
-
-        return is_greater;
+        return (! (*this <= rhs));    
     }
 
 /*
@@ -292,15 +210,7 @@ namespace monetary
  */
     bool Money::operator>= (const Money& rhs)
     {
-        bool is_greater_or_equal{false};
-
-        if((*this > rhs) || (*this == rhs))
-        {
-            is_greater_or_equal = true;
-            return is_greater_or_equal;
-        }
-        
-        return is_greater_or_equal;
+        return *this > rhs || *this == rhs;
     }
 
 /*
@@ -310,15 +220,7 @@ namespace monetary
  */
     bool Money::operator!= (const Money& rhs)
     {
-        bool not_equal{true};
-        
-        if(*this == rhs)
-        {
-            not_equal = false;
-            return not_equal;
-        }
-        
-        return not_equal;
+        return (! (*this == rhs));
     }
 
 /*
@@ -329,14 +231,14 @@ namespace monetary
  */
     Money& Money::operator++ ()
     {
-        if(this->hundreds == 99)
+        if(hundreds == 99)
         {
-            this->units = this->units + 1;
-            this->hundreds = 0;
+            units += 1;
+            hundreds = 0;
         }
         else
         {
-            this->hundreds = this->hundreds + 1;
+            hundreds += 1;
         }
         
         return *this;
@@ -348,19 +250,19 @@ namespace monetary
  * Ökar ett Money-objekts hundradelar med 1. Resultatet är ett rvalue av
  * objektets värde före stegningen. (Postfix ++).
  */
-    Money& Money::operator++ (int)
+    Money Money::operator++ (int)
     {
-        Money& m = * this;
-        if(this->hundreds == 99)
+        Money temp{*this};
+        if(hundreds == 99)
         {
-            this->units = this->units + 1;
-            this->hundreds = 0;
+            ++units;
+            hundreds = 0;
         }
         else
         {
-            this->hundreds = this->hundreds + 1;
+            ++hundreds;
         }
-        return m;
+        return temp;
     }
     
 /*
@@ -371,19 +273,19 @@ namespace monetary
  */
     Money& Money::operator-- ()
     {
-        if((this->hundreds == 0) && (this->units == 0))
+        if((hundreds == 0) && (units == 0))
         {
             throw monetary_error{"Nedstegning får ej ge ett negativt värde!"};
         }
         
-        if(this->hundreds == 0)
+        if(hundreds == 0)
         {
-            this->units = this->units - 1;
-            this->hundreds = 99;
+            units -= 1;
+            hundreds = 99;
         }
         else
         {
-            this->hundreds = this->hundreds - 1;
+            hundreds -= 1;
         }
 
         return *this;
@@ -395,25 +297,25 @@ namespace monetary
  * Sänker ett Money-objekts hundradelar med 1. Resultatet är ett rvalue av
  * objektets värde före stegningen. (Postfix --).
  */
-    Money& Money::operator-- (int)
+    Money Money::operator-- (int)
     {
-        Money& m = * this;
-        if((this->hundreds == 0) && (this->units == 0))
+        Money temp{*this};
+        if((hundreds == 0) && (units == 0))
         {
             throw monetary_error{"Nedstegning får ej ge ett negativt värde!"};
         }
         
-        if(this->hundreds == 0)
+        if(hundreds == 0)
         {
-            this->units = this->units - 1;
-            this->hundreds = 99;
+            --units;
+            hundreds = 99;
         }
         else
         {
-            this->hundreds = this->hundreds - 1;
+            --hundreds;
         }
 
-        return m;
+        return temp;
     }
 
 /*
@@ -421,10 +323,9 @@ namespace monetary
  *
  * Utför den sammansatta tilldelningen "m1 = m1 + m2".
  */
-    Money& Money::operator+= (Money& rhs)
+    Money& Money::operator+= (const Money& rhs)
     {
-        *this = *this + rhs;
-        return *this;
+        return (*this = *this + rhs);
     }
 
 /*
@@ -432,56 +333,36 @@ namespace monetary
  *
  * Utför subtraktionen "m1 - m2". Resultatet är ett rvalue.
  */
-    Money& Money::operator- (Money& rhs)
+    Money Money::operator- (const Money& rhs)
     {
-        Money& m = * new Money;
-        int decrease_units{0};
-        int hundreds_to_add{this->hundreds - rhs.hundreds};
+        Money m;
+        if(! (currency == rhs.currency))
+        {
+            throw monetary_error{"Du kan inte subtrahera två objekt "
+                    "av olika valutor!"};
+        }
 
-        if((this->units - rhs.units) < 0)
+        if(((units - rhs.units) < 0) ||
+           (((units - rhs.units) == 0) && (hundreds - rhs.hundreds) < 0))
         {
             throw monetary_error{"Subtraktion får ej resultera "
                     "i ett negativt värde!"};
         }
-        
-        if(((this->units - rhs.units) == 0) && hundreds_to_add < 0)
+        m.hundreds = hundreds - rhs.hundreds;
+        if(m.hundreds < 0)
         {
-            throw monetary_error{"Subtraktion får ej resultera "
-                    "i ett negativt värde!"};
+            m.hundreds = m.hundreds + 100;
+            m.units = units - rhs.units - 1;
         }
-       
-        if(hundreds_to_add < 0)
+        else
         {
-            decrease_units = 1;
-            hundreds_to_add = hundreds_to_add + 100;
+            m.units = units - rhs.units;
         }
-
-        if(this->currency == rhs.currency)
-        {
-            m.currency = this->currency;
-            m.units = this->units - rhs.units - decrease_units;
-            m.hundreds = hundreds_to_add;
-            return m;
-        }
-
-        if(this->currency == "")
-        {
+        if(currency == "")
             m.currency = rhs.currency;
-            m.units = this->units - rhs.units - decrease_units;
-            m.hundreds = hundreds_to_add;
-            return m;
-        }
-        
-        if(rhs.currency == "")
-        {
-            m.currency = this->currency;
-            m.units = this->units - rhs.units - decrease_units;
-            m.hundreds = hundreds_to_add;
-            return m;
-        }
-
-        throw monetary_error{"Du kan inte subtrahera två objekt "
-                "av olika valutor!"};
+        else
+            m.currency = currency;
+        return m;
     }
 
 /*
@@ -489,10 +370,9 @@ namespace monetary
  *
  * Utför den sammansatta tilldelningen "m1 = m1 - m2".
  */
-    Money& Money::operator-= (Money& rhs)
+    Money& Money::operator-= (const Money& rhs)
     {
-        *this = *this - rhs;
-        return *this;
+        return  (*this = *this - rhs);
     }
 
 /*
@@ -514,8 +394,8 @@ namespace monetary
 
 	if((! isalpha(control)) && (! isdigit(control)))
         {
-	    throw monetary_error{"Första funna tecknet vid inläsning "
-                    "är felaktigt!"};
+            i_stream.setstate(ios::failbit);
+            return i_stream;
         }
         
         if(isalpha(control))
@@ -526,8 +406,8 @@ namespace monetary
 
 		if(! isalpha(curr[i]))
 		{
-                    throw monetary_error{"Valutan måste bestå av tre bokstäver "
-                            "och efterföljas av minst ett mellanslag!"};
+                    i_stream.setstate(ios::failbit);
+                    return i_stream;
 		}
             }
 
@@ -535,8 +415,8 @@ namespace monetary
 
             if(! (control == ' '))
             {
-                throw monetary_error{"Valutan måste bestå av tre bokstäver "
-                        "och efterföljas av minst ett mellanslag!"};
+                i_stream.setstate(ios::failbit);
+                return i_stream;
             }
 
 	    got_a_currency = true;
@@ -560,8 +440,8 @@ namespace monetary
         }
 	else
         {
-	    throw monetary_error{"Antal enheter har inte fått ett värde "
-                    "vid inläsning!"};
+            i_stream.setstate(ios::failbit);
+            return i_stream;
         }
         
         if(control == '.')
@@ -588,8 +468,8 @@ namespace monetary
             }
 	    else
             {
-		throw monetary_error{"Felaktigt värde på antal hundradelar "
-                        "vid inläsning!"};
+                i_stream.setstate(ios::failbit);
+                return i_stream;
             }
         }
     
